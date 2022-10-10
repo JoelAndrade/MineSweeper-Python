@@ -1,0 +1,1 @@
+{"rows": 16, "columns": 30, "blockLength": 40, "Mines": 99}
