@@ -7,7 +7,7 @@ a = Analysis(['MineSweeper_pygame.py'],
              pathex=['.'],
              binaries=[],
              datas=[
-             	('.\\Images\\*.png', '.\\Images\\')
+             	('.\\Images\\Dark\\', '.\\Images\\Light\\')
              ],
              hiddenimports=[],
              hookspath=[],

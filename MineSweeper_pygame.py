@@ -6,8 +6,9 @@ import json
 
 # Loads .txt file
 try:
-    with open('settings.txt') as txtFile:
-        settings = json.load(txtFile)
+    with open('settings.txt') as settings_file:
+        settings = json.load(settings_file)
+#
 
 # If there is no txt file the program will make one
 except:
@@ -15,10 +16,12 @@ except:
         'rows': 16,
         'columns': 30,
         'block_length': 40,
-        'mines': 99
+        'mines': 99,
+        'dark_mode': False
     }
-    with open('settings.txt','w') as txtFile:
-        json.dump(settings, txtFile)
+    with open('settings.txt','w') as settings_file:
+        json.dump(settings, settings_file)
+#
 
 # Constants
 fps = 30
@@ -29,46 +32,6 @@ num_mines = settings["mines"]
 
 # Sets up window
 window = pygame.display.set_mode((block_length*col, block_length*row))
-
-# Imports Images
-covered_block = pygame.image.load(os.path.join('Images','block.png')).convert()
-covered_block = pygame.transform.scale(covered_block, (block_length, block_length))
-
-empty_block = pygame.image.load(os.path.join('Images','EmptyBlock.png')).convert()
-empty_block = pygame.transform.scale(empty_block, (block_length, block_length))
-
-flag_block = pygame.image.load(os.path.join('Images','Flag.png')).convert()
-flag_block = pygame.transform.scale(flag_block, (block_length, block_length))
-
-mine_block = pygame.image.load(os.path.join('Images','mine.png')).convert()
-mine_block = pygame.transform.scale(mine_block, (block_length, block_length))
-
-wrong_mine_block = pygame.image.load(os.path.join('Images','wrongMine.png')).convert()
-wrong_mine_block = pygame.transform.scale(wrong_mine_block, (block_length, block_length))
-
-one_block = pygame.image.load(os.path.join('Images','1.png')).convert()
-one_block = pygame.transform.scale(one_block, (block_length, block_length))
-
-two_block = pygame.image.load(os.path.join('Images','2.png')).convert()
-two_block = pygame.transform.scale(two_block, (block_length, block_length))
-
-three_block = pygame.image.load(os.path.join('Images','3.png')).convert()
-three_block = pygame.transform.scale(three_block, (block_length, block_length))
-
-four_block = pygame.image.load(os.path.join('Images','4.png')).convert()
-four_block = pygame.transform.scale(four_block, (block_length, block_length))
-
-five_block = pygame.image.load(os.path.join('Images','5.png')).convert()
-five_block = pygame.transform.scale(five_block, (block_length, block_length))
-
-six_block = pygame.image.load(os.path.join('Images','6.png')).convert()
-six_block = pygame.transform.scale(six_block, (block_length, block_length))
-
-seven_block = pygame.image.load(os.path.join('Images','7.png')).convert()
-seven_block = pygame.transform.scale(seven_block, (block_length, block_length))
-
-eight_block = pygame.image.load(os.path.join('Images','8.png')).convert()
-eight_block = pygame.transform.scale(eight_block, (block_length, block_length))
 
 class mine_sweeper_field:
     def __init__(self, row_input, col_input, num_mines_input):
@@ -97,26 +60,25 @@ class mine_sweeper_field:
         # Then add the mines to the field 
         mine_count = 0
         while (mine_count < self.num_mines):
-            x = random.randint(1, self.row)
-            y = random.randint(1, self.col)
-            if (self.hidden[x][y] == '*'):
-                mine_count -= 1
-            self.hidden[x][y] = '*'
+            i = random.randint(1, self.row)
+            j = random.randint(1, self.col)
+            if (self.hidden[i][j] == '*'):
+                continue
+            self.hidden[i][j] = '*'
             mine_count += 1
+        #
 
         # Then places numbers next to the mines
         for i in range(1, self.row + 1):
             for j in range (1, self.col + 1):
                 if (self.hidden[i][j] != '*'):
                     self.hidden[i][j] = self.__count_mines(i, j)
+            #
+        #
     #
 
     def __create_field(self, fill: str):
         field = [[fill for i in range(self.col + 2)] for j in range(self.row + 2)]
-        for i in range(self.row + 2):
-            for j in range(self.col + 2):
-                if ((i == 0) or (j == 0)):
-                    field[i][j] = '|'
         return field
     #
 
@@ -143,6 +105,63 @@ class mine_sweeper_field:
 
         return num_mines
     #
+#
+
+def import_images(dark_mode):
+    global covered_block
+    global empty_block
+    global flag_block
+    global mine_block
+    global wrong_mine_block
+    global one_block
+    global two_block
+    global three_block
+    global four_block
+    global five_block
+    global six_block
+    global seven_block
+    global eight_block
+
+    image_folder = "Dark" if dark_mode else "Light"
+
+    covered_block = pygame.image.load(os.path.join(f'Images/{image_folder}','block.png')).convert()
+    covered_block = pygame.transform.scale(covered_block, (block_length, block_length))
+
+    empty_block = pygame.image.load(os.path.join(f'Images/{image_folder}','EmptyBlock.png')).convert()
+    empty_block = pygame.transform.scale(empty_block, (block_length, block_length))
+
+    flag_block = pygame.image.load(os.path.join(f'Images/{image_folder}','Flag.png')).convert()
+    flag_block = pygame.transform.scale(flag_block, (block_length, block_length))
+
+    mine_block = pygame.image.load(os.path.join(f'Images/{image_folder}','mine.png')).convert()
+    mine_block = pygame.transform.scale(mine_block, (block_length, block_length))
+
+    wrong_mine_block = pygame.image.load(os.path.join(f'Images/{image_folder}','wrongMine.png')).convert()
+    wrong_mine_block = pygame.transform.scale(wrong_mine_block, (block_length, block_length))
+
+    one_block = pygame.image.load(os.path.join(f'Images/{image_folder}','1.png')).convert()
+    one_block = pygame.transform.scale(one_block, (block_length, block_length))
+
+    two_block = pygame.image.load(os.path.join(f'Images/{image_folder}','2.png')).convert()
+    two_block = pygame.transform.scale(two_block, (block_length, block_length))
+
+    three_block = pygame.image.load(os.path.join(f'Images/{image_folder}','3.png')).convert()
+    three_block = pygame.transform.scale(three_block, (block_length, block_length))
+
+    four_block = pygame.image.load(os.path.join(f'Images/{image_folder}','4.png')).convert()
+    four_block = pygame.transform.scale(four_block, (block_length, block_length))
+
+    five_block = pygame.image.load(os.path.join(f'Images/{image_folder}','5.png')).convert()
+    five_block = pygame.transform.scale(five_block, (block_length, block_length))
+
+    six_block = pygame.image.load(os.path.join(f'Images/{image_folder}','6.png')).convert()
+    six_block = pygame.transform.scale(six_block, (block_length, block_length))
+
+    seven_block = pygame.image.load(os.path.join(f'Images/{image_folder}','7.png')).convert()
+    seven_block = pygame.transform.scale(seven_block, (block_length, block_length))
+
+    eight_block = pygame.image.load(os.path.join(f'Images/{image_folder}','8.png')).convert()
+    eight_block = pygame.transform.scale(eight_block, (block_length, block_length))
 #
 
 # This function expands the field when a the user uncovers an empty square
@@ -248,8 +267,9 @@ def place_flag(visable_field, num_flags, i, j): # Places or removes a flag i fth
                                                                            \
                                                             Minesweeper")
     return num_flags
+#
    
-def drawScreen(visable_field):  # Draws the field 
+def draw_screen(visable_field):  # Draws the field 
     window.fill("black")
     for i in range(1, row + 1):
         for j in range(1, col + 1):
@@ -281,7 +301,10 @@ def drawScreen(visable_field):  # Draws the field
                 window.blit(seven_block, (block_length*(j - 1), block_length*(i - 1)))
             elif (visable_field[i][j] == 8):
                 window.blit(eight_block, (block_length*(j - 1), block_length*(i - 1)))
+        #
+    #
     pygame.display.update()
+#
 
 def main(): 
     field.init()
@@ -298,14 +321,18 @@ def main():
 
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
+                with open('settings.txt', 'w') as settings_file:
+                    json.dump(settings, settings_file)
                 pygame.quit()
                 sys.exit()
+            #
 
-            mousePress = pygame.mouse.get_pressed()
+            mouse_press = pygame.mouse.get_pressed()
+            keyboard_press = pygame.key.get_pressed()
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 i, j = pos_to_index()
 
-                if (mousePress[0]):
+                if (mouse_press[0]):
                     if (first_block):
                         while(field.hidden[i][j] != 0):
                             field.hidden_setup()
@@ -324,29 +351,46 @@ def main():
                         run = check_win_condition(field.visable, field.hidden)
                 #
 
-                if (mousePress[2]):
+                # if (mouse_press[1]):
+                #     # TODO: Add the middle click function
+                # #
+
+                if (mouse_press[2]):
                     num_flags = place_flag(field.visable, num_flags, i, j)
+                #
+            #
+
+            if (event.type == pygame.KEYDOWN):
+                if (keyboard_press[pygame.K_SPACE]):
+                    settings["dark_mode"] = not settings["dark_mode"]
+                    import_images(settings["dark_mode"])
                 #
             #
         #
 
-        drawScreen(field.visable)
+        draw_screen(field.visable)
     #
     
-    while(not run):
+    while (not run):
         clock.tick(fps)
 
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
+                with open('settings.txt', 'w') as settings_file:
+                    json.dump(settings, settings_file)
                 pygame.quit()
                 sys.exit()
+            #
 
             if (event.type == pygame.MOUSEBUTTONDOWN):
                 run = True
+    #
 #
 
-if (__name__ == "__main__"): 
+if (__name__ == "__main__"):
+    import_images(settings["dark_mode"])
     field = mine_sweeper_field(row, col, num_mines)
 
     while(True):
         main()
+#
