@@ -33,7 +33,7 @@ num_mines = settings["mines"]
 # Sets up window
 window = pygame.display.set_mode((block_length*col, block_length*row))
 
-class mine_sweeper_field:
+class MineSweeperField:
     def __init__(self, row_input, col_input, num_mines_input):
         self.row = row_input
         self.col = col_input
@@ -178,38 +178,147 @@ def check_empty(visable, hidden, rowInput, colInput):
                     visable[i][j] = ' '
                     hidden[i][j] = ' '
                     check = True
-                    if (hidden[i-1][j-1] != 0): # Check top left
-                        visable[i-1][j-1] = hidden[i-1][j-1]
-                    else:
-                        hidden[i-1][j-1] = '!'
-                    if (hidden[i-1][j] != 0): # Check top
-                        visable[i-1][j] = hidden[i-1][j]
-                    else:
-                        hidden[i-1][j] = '!'                         
-                    if (hidden[i-1][j+1] != 0): # Check Top right
-                        visable[i-1][j+1] = hidden[i-1][j+1]
-                    else:
-                        hidden[i-1][j+1] = '!'
-                    if (hidden[i][j-1] != 0): # Check left
-                        visable[i][j-1] = hidden[i][j-1]
-                    else:
-                        hidden[i][j-1] = '!'
-                    if (hidden[i][j+1] != 0): # Check right
-                        visable[i][j+1] = hidden[i][j+1]
-                    else:
-                        hidden[i][j+1] = '!'                       
-                    if (hidden[i+1][j-1] != 0): # Check bottom left
-                        visable[i+1][j-1] = hidden[i+1][j-1]
-                    else:
-                        hidden[i+1][j-1] = '!'                     
-                    if (hidden[i+1][j] != 0): # Check bottom
-                        visable[i+1][j] = hidden[i+1][j]
-                    else:
-                        hidden[i+1][j] = '!'                     
-                    if (hidden[i+1][j+1] != 0): # Check bottom right
-                        visable[i+1][j+1] = hidden[i+1][j+1]
-                    else:
-                        hidden[i+1][j+1] = '!'
+
+                    if (visable[i-1][j-1] != 'f'): # Check top left
+                        if (hidden[i-1][j-1] != 0):
+                            visable[i-1][j-1] = hidden[i-1][j-1]
+                        else:
+                            hidden[i-1][j-1] = '!'
+                    #
+
+                    if (visable[i-1][j] != 'f'): # Check top
+                        if (hidden[i-1][j] != 0):
+                            visable[i-1][j] = hidden[i-1][j]
+                        else:
+                            hidden[i-1][j] = '!'
+                    #
+
+                    if (visable[i-1][j+1] != 'f'): # Check Top right
+                        if (hidden[i-1][j+1] != 0):
+                            visable[i-1][j+1] = hidden[i-1][j+1]
+                        else:
+                            hidden[i-1][j+1] = '!'
+                    #
+
+                    if (visable[i][j-1] != 'f'): # Check left
+                        if (hidden[i][j-1] != 0):
+                            visable[i][j-1] = hidden[i][j-1]
+                        else:
+                            hidden[i][j-1] = '!'
+                    #
+
+                    if (visable[i][j+1] != 'f'): # Check right
+                        if (hidden[i][j+1] != 0):
+                            visable[i][j+1] = hidden[i][j+1]
+                        else:
+                            hidden[i][j+1] = '!'
+                    #
+
+                    if (visable[i+1][j-1] != 'f'): # Check bottom left
+                        if (hidden[i+1][j-1] != 0):
+                            visable[i+1][j-1] = hidden[i+1][j-1]
+                        else:
+                            hidden[i+1][j-1] = '!'
+                    #
+
+                    if (visable[i+1][j] != 'f'): # Check bottom
+                        if (hidden[i+1][j] != 0):
+                            visable[i+1][j] = hidden[i+1][j]
+                        else:
+                            hidden[i+1][j] = '!'
+                    #
+
+                    if (visable[i+1][j+1] != 'f'):
+                        if (hidden[i+1][j+1] != 0):
+                            visable[i+1][j+1] = hidden[i+1][j+1]
+                        else:
+                            hidden[i+1][j+1] = '!'
+                    #
+                #
+            #
+        #
+    #
+#
+
+def middle_click_check(visable, hidden, i, j):
+    number_clicked = visable[i][j]
+    num_adjacent_flags = 0
+
+    if (visable[i-1][j-1] == 'f'): # Check top left
+        num_adjacent_flags += 1
+    if (visable[i-1][j] == 'f'): # Check top
+        num_adjacent_flags += 1
+    if (visable[i-1][j+1] == 'f'): # Check Top right
+        num_adjacent_flags += 1
+    if (visable[i][j-1] == 'f'): # Check left
+        num_adjacent_flags += 1
+    if (visable[i][j+1] == 'f'): # Check right
+        num_adjacent_flags += 1
+    if (visable[i+1][j-1] == 'f'): # Check bottom left
+        num_adjacent_flags += 1
+    if (visable[i+1][j] == 'f'): # Check bottom
+        num_adjacent_flags += 1
+    if (visable[i+1][j+1] == 'f'): # Check bottom right
+        num_adjacent_flags += 1
+
+    if (number_clicked == num_adjacent_flags):
+        if (visable[i-1][j-1] != 'f'   and hidden[i-1][j-1] == '*'): # Check top left
+            return True
+        elif (visable[i-1][j] != 'f'   and hidden[i-1][j] == '*'): # Check top
+            return True
+        elif (visable[i-1][j+1] != 'f' and hidden[i-1][j+1] == '*'): # Check Top right
+            return True
+        elif (visable[i][j-1] != 'f'   and hidden[i][j-1] == '*'): # Check left
+            return True
+        elif (visable[i][j+1] != 'f'   and hidden[i][j+1] == '*'): # Check right
+            return True
+        elif (visable[i+1][j-1] != 'f' and hidden[i+1][j-1] == '*'): # Check bottom left
+            return True
+        elif (visable[i+1][j] != 'f'   and hidden[i+1][j] == '*'): # Check bottom
+            return True
+        elif (visable[i+1][j+1] != 'f' and hidden[i+1][j+1] == '*'): # Check bottom right
+            return True
+        
+        if (hidden[i-1][j-1] == 0): # Check top left
+            check_empty(visable, hidden, i-1, j-1)
+        elif (visable[i-1][j-1] != 'f'):
+            visable[i-1][j-1] = hidden[i-1][j-1]
+
+        if (hidden[i-1][j] == 0): # Check top
+            check_empty(visable, hidden, i-1, j)
+        elif (visable[i-1][j] != 'f'):
+            visable[i-1][j] = hidden[i-1][j]
+
+        if (hidden[i-1][j+1] == 0): # Check Top right
+            check_empty(visable, hidden, i-1, j+1)
+        elif (visable[i-1][j+1] != 'f'):
+            visable[i-1][j+1] = hidden[i-1][j+1]
+
+        if (hidden[i][j-1] == 0): # Check left
+            check_empty(visable, hidden, i, j-1)
+        elif (visable[i][j-1] != 'f'):
+            visable[i][j-1] = hidden[i][j-1]
+
+        if (hidden[i][j+1] == 0): # Check right
+            check_empty(visable, hidden, i, j+1)
+        elif (visable[i][j+1] != 'f'):
+            visable[i][j+1] = hidden[i][j+1]
+
+        if (hidden[i+1][j-1] == 0): # Check bottom left
+            check_empty(visable, hidden, i+1, j-1)
+        elif (visable[i+1][j-1] != 'f'):
+            visable[i+1][j-1] = hidden[i+1][j-1]
+
+        if (hidden[i+1][j] == 0): # Check bottom
+            check_empty(visable, hidden, i+1, j)
+        elif (visable[i+1][j] != 'f'):
+            visable[i+1][j] = hidden[i+1][j]
+
+        if (hidden[i+1][j+1] == 0): # Check bottom right
+            check_empty(visable, hidden, i+1, j+1)
+        elif (visable[i+1][j+1] != 'f'):
+            visable[i+1][j+1] = hidden[i+1][j+1]
+    #
 #
 
 # Converts the posion of the mouse input to the array index
@@ -241,18 +350,23 @@ def check_win_condition(visable, hidden): # Checks if the player won the game
         for j in range(1, col + 1):
             if (visable[i][j] == '#' and hidden[i][j] != '*'):
                 return True
+        #
+    #
             
     # If the player won, the blocks without flags get flags on them
     for i in range(1, row + 1):
         for j in range(1, col + 1):
             if (visable[i][j] == '#'):
                 visable[i][j] = 'f'
+        #
+    #
+
     pygame.display.set_caption("\
                                 \
                                 \
                                 \
                                 \
-                                            You Win!")   
+                                            You Win!")
     return False
 #
 
@@ -260,9 +374,12 @@ def place_flag(visable_field, num_flags, i, j): # Places or removes a flag i fth
     if (visable_field[i][j] == '#'):
         visable_field[i][j] = 'f'
         num_flags += 1
+    #
     elif (visable_field[i][j] == 'f'):
         visable_field[i][j] = '#'
         num_flags -= 1
+    #
+
     pygame.display.set_caption("Number of Mines: " + str(num_mines - num_flags) + "\
                                                                            \
                                                             Minesweeper")
@@ -337,23 +454,33 @@ def main():
                         while(field.hidden[i][j] != 0):
                             field.hidden_setup()
                         first_block = False
+                    #
 
                     if (field.hidden[i][j] == '*' and field.visable[i][j] != 'f'):
                         field.visable = check_wrong_flag(field.visable, field.hidden)
                         run = False
+                    #
 
                     elif (field.hidden[i][j] == 0 and field.visable[i][j] != 'f'):
-                        check_empty(field.visable, field.hidden, i, j) 
+                        check_empty(field.visable, field.hidden, i, j)
                         run = check_win_condition(field.visable, field.hidden)
+                    #
 
                     elif (field.visable[i][j] != 'f'):
                         field.visable[i][j] = field.hidden[i][j]
                         run = check_win_condition(field.visable, field.hidden)
+                    #
                 #
 
-                # if (mouse_press[1]):
-                #     # TODO: Add the middle click function
-                # #
+                if (mouse_press[1]):
+                    mine_hit = middle_click_check(field.visable, field.hidden, i, j)
+                    if (mine_hit):
+                        field.visable = check_wrong_flag(field.visable, field.hidden)
+                        run = False
+                    else:
+                        run = check_win_condition(field.visable, field.hidden)
+                    #
+                #
 
                 if (mouse_press[2]):
                     num_flags = place_flag(field.visable, num_flags, i, j)
@@ -389,7 +516,7 @@ def main():
 
 if (__name__ == "__main__"):
     import_images(settings["dark_mode"])
-    field = mine_sweeper_field(row, col, num_mines)
+    field = MineSweeperField(row, col, num_mines)
 
     while(True):
         main()
